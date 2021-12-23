@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <table id="table"></table>
+    <script>
+      let table = document.querySelector("#table");
+      let url =
+        "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
+      fetch(url)
+        .then((result) => result.json())
+        .then((json) => {
+          return json.filter((it) => it.rate > 25);
+        })
+        .then((result) => {
+          // console.log(result.map((it) => it.rate));
+          result.map((it) =>
+            table.insertAdjacentHTML(
+              "beforeend",
+              `<tr><td>${it.cc}</td><td>${it.rate}</td></tr>`
+            )
+          );
+        });
+    </script>
+  </body>
+</html>
