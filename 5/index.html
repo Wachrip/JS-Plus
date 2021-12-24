@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let url = "https://jsonplaceholder.typicode.com/users/";
+
+      let fetchingUrl = async (id) => {
+        let fetchedUrl = url + id;
+        // console.log(fetchedUrl);
+        let user = fetch(fetchedUrl)
+          .then((response) => {
+            return response.json();
+          })
+          .then((result) => {
+            console.log(`comentaries to user with id: ${result.id}`);
+          });
+        // console.log(user);
+        return user;
+      };
+
+      console.log(fetchingUrl(1));
+    </script>
+  </body>
+</html>
