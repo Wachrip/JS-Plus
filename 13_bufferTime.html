@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>bufferTime</title>
+  </head>
+  <body>
+    <input type="text" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.4.0/rxjs.umd.min.js"></script>
+    <script>
+      // https://rxjs-dev.firebaseapp.com/api/operators/bufferTime
+      // bufferTime - сохраняет данные из потока в течении одного периода времени
+      const { bufferTime, buffer, map, take } = rxjs.operators;
+      rxjs
+        .fromEvent(document.querySelector("input"), "input")
+        // Сохраняем значение - в течении 3 секунд
+        .pipe(
+          map((event) => event.target.value),
+          bufferTime(1000),
+          take(4)
+        )
+        .subscribe((val) => console.log(val));
+    </script>
+  </body>
+</html>
