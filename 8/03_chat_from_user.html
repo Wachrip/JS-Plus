@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body class='mt-5'>
+    <div class="container-fluid">
+        <div class="row" id='userForm'>
+            <div class="col">
+                <form>
+                    <div class="form-group">
+                        <label for="">Enter username</label>
+                        <input id="username" class="form-control">
+                        <hr>
+                        <input type="button" id='login' class="btn btn-primary" value='Login'>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" id='chatForm'>
+            <div class="col-4">
+                <div class="card bg-light">
+                    <h4 class="card-header">Online users</h3>
+                        <div class='card-body'>
+                            <ul class='list-group pl-5' id="users"></ul>
+                        </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="chat" id="chat">
+
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label for="">Enter message</label>
+                        <textarea id="textMessage" class="form-control"></textarea>
+                        <hr>
+                        <input type="button" id='sendMessageBtn' class="btn btn-sm btn-primary" value='Send message' required>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            
+            let socket = new WebSocket('ws://localhost:9009');
+            let message = $('#textMessage');
+            let sendMessageBtn = $('#sendMessageBtn');
+            let chat = $('#chat');
+            let chatForm = $("#chatForm");
+            let userForm = $("#userForm");
+            chatForm.hide();
+            let userName = $('#username');
+            let loginBtn = $("#login");
+            let userList = $("#users");
+            let currentName;
+            sendMessageBtn.click((event) => {
+                const mess = JSON.stringify({ type: 'message', text: message.val(), user: currentName });
+                socket.send(mess);
+                chat.append(`<div class='alert alert-warning'>You: ${message.val()}</div>`)
+                message.val('');
+            });
+            loginBtn.click(event => {
+                currentName = userName.val();
+                const mess = JSON.stringify({ type: 'user', text: userName.val() });
+                socket.send(mess);
+                userForm.hide();
+                chatForm.show();
+            });
+            socket.onmessage = (event) => {
+                const mess = JSON.parse(event.data);
+                console.log(mess)
+                if (mess.type === 'users') {
+                    
+                    let li = document.createElement('li');
+                    li.innerText = mess.text;
+                    userList.append(li);
+                    console.log(userList.children().val())
+                } else if (mess.type === 'message') {
+                    chat.append(`<div class='alert alert-info'>${mess.user}: ${mess.text}</div>`)
+
+                }
+
+            }
+
+        });
+
+
+
+
+    </script>
+</body>
+
+</html>

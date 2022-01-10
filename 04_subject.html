@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Subject</title>
+  </head>
+  <body>
+    <!-- <script src='../node_modules/rxjs/bundles/rxjs.umd.js'></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.4.0/rxjs.umd.min.js"></script>
+
+    <script>
+      // https://rxjs-dev.firebaseapp.com/api/index/class/Subject
+      const { Observable, Subject } = rxjs;
+      const subj$ = new Subject();
+      const obs$ = rxjs.interval(1000);
+      // Все подписчики Subject получают одно и то же значение от потока
+      obs$.subscribe(subj$); // Подписка на поток с помощью Subject
+
+      subj$.subscribe((x) => {
+        fetch("https://api.github.com/users/1")
+          .then((response) => response.json())
+          .then((res) => console.log(res));
+        // console.log("Subject 1:", x);
+      });
+      //   setTimeout(() => {
+      //     subj$.subscribe((x) => console.log("Subject 2:", x));
+      //   }, 3000);
+    </script>
+  </body>
+</html>

@@ -18,25 +18,28 @@
       rxjs
         .fromEvent(document.querySelector("input"), "input")
         .pipe(
-          fetch(url + "1")
+          fetch(url)
             .then((response) => response.json())
-            .then((result) => console.log(result)),
+            .then((result) => {
+              // console.log(input.value);
+              console.log(result);
+            }),
           bufferTime(1000)
         )
         .subscribe((val) => console.log(val));
 
       console.log(bufferTime);
 
-      input.addEventListener("input", (e) => {
-        fetch(url + e.target.value)
-          .then((response) => response.json())
-          .then((result) => {
-            console.log(result);
-            console.log(result.name);
-            console.log(result.email);
-            console.log(result.public_repos);
-          });
-      });
+      // input.addEventListener("input", (e) => {
+      //   fetch(url + e.target.value)
+      //     .then((response) => response.json())
+      //     .then((result) => {
+      //       console.log(result);
+      //       console.log(result.name);
+      //       console.log(result.email);
+      //       console.log(result.public_repos);
+      //     });
+      // });
     </script>
   </body>
 </html>
